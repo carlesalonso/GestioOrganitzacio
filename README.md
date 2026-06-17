@@ -1,5 +1,8 @@
 # Gestio Organització Acadèmica
 
+![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
+
 Scripts PowerShell per gestionar repositoris de GitHub dins d'una organització acadèmica.
 
 El repositori inclou dues utilitats principals:
