@@ -53,6 +53,10 @@ L'script `delete_repos.ps1`:
 - Falten permisos: comprova rols a l'organització i scopes del token.
 - No es troben repositoris: revisa `$organization` i `$pattern`.
 
+## Llicència
+
+Aquest projecte està sota la llicència MIT. Pots trobar-ne més detalls a l'arxiu `LICENSE`.
+
 ## Autoria
 
 Carlos Alonso Martinez 2026
