@@ -1,11 +1,17 @@
 # --- CONFIGURACIÓN ---
 # Nombre de la organización de GitHub donde se crearán los repositorios
-$OrgName = "nombre-de-tu-organizacion"
+$OrgName = "classesSMX2n"
 # Archivo con una lista de usuarios de GitHub, uno por línea
-$UsersFile = "usuarios.txt"
+$UsersFile = "users.csv"
 # Nombre base para los repositorios
 $repoBaseName = "repo_"
 # ---------------------
+
+# Comprova si la GitHub CLI està instal·lada
+if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+    Write-Host "GitHub CLI no està instal·lada. Si us plau, instal·la-la abans d'executar aquest script." -ForegroundColor Red
+    return
+}
 
 # Verificar si el archivo de usuarios existe
 if (-not (Test-Path $UsersFile)) {
@@ -25,7 +31,7 @@ foreach ($Username in $UserList) {
     # 1. Crear el repositorio en la organización
     # Usamos --private para que sean privados por defecto
 
-    gh repo create "$OrgName/$RepoName" --private --confirm
+    gh repo create "$OrgName/$RepoName" --private --yes
 
     # 2. Asignar el usuario como colaborador con permiso de escritura ('push')
 
@@ -33,8 +39,7 @@ foreach ($Username in $UserList) {
     
     gh api `
       --method PUT `
-      -H "Accept: application/vnd.github.v3+json" `
-      "/repos/$OrgName/$RepoName/collaborators/$Username" `
+      -X "/repos/$OrgName/$RepoName/collaborators/$Username" `
       -f permission="push"
 
     Write-Host "$RepoName listo para $Username" -ForegroundColor Green

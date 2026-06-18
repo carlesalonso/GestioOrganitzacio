@@ -1,6 +1,12 @@
 # Variables de configuració
 $organization = "classesSMX2n"
-$pattern = "projecte6-"
+$pattern = "repo_"
+
+# Comprova si la GitHub CLI està instal·lada
+if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+    Write-Host "GitHub CLI no està instal·lada. Si us plau, instal·la-la abans d'executar aquest script." -ForegroundColor Red
+    return
+}
 
 # Comprova si el token actual té permisos per eliminar repositoris
 $authStatus = gh auth status -h github.com 2>&1 | Out-String
