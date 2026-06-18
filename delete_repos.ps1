@@ -1,6 +1,6 @@
 # Variables de configuració
 $organization = "classesSMX2n"
-$pattern = "ud9-"
+$pattern = "projecte6-"
 
 # Comprova si el token actual té permisos per eliminar repositoris
 $authStatus = gh auth status -h github.com 2>&1 | Out-String
