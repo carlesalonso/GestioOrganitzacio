@@ -41,7 +41,7 @@ L'script `create_repos_by_group.ps1`:
 
 L'script `create_repos_by_user`:
 
-1. Llegeix usuaris des de `usuarios.txt` (un usuari de GitHub per línia).
+1. Llegeix usuaris des de `users.csv` (un usuari de GitHub per línia).
 2. Crea un repositori privat per cada usuari amb format `repo_<usuari>`.
 3. Assigna cada usuari com a col·laborador amb permís `push` al seu repositori.
 
