@@ -3,13 +3,12 @@
 ![PowerShell](https://img.shields.io/badge/PowerShell-5391FE?style=for-the-badge&logo=powershell&logoColor=white)
 ![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)
 
-Scripts PowerShell per gestionar repositoris de GitHub dins d'una organització acadèmica.
+Scripts PowerShell per gestionar repositoris de GitHub a escola. Algunes de les accions que permeten són:
 
-El repositori inclou tres utilitats principals:
-
-- `create_repos_by_group.ps1`: crea repositoris de projecte en lot i assigna permisos d'administrador a equips.
-- `create_repos_by_user`: crea repositoris en lot a partir d'un fitxer d'usuaris i assigna permisos d'escriptura.
-- `delete_repos.ps1`: elimina repositoris en lot filtrant per patró de nom.
+- Acceptar invitacions de col·laborador a repositoris de GitHub.
+- Crear repositoris en lot per grups d'usuaris.
+- Crear repositoris per usuari a partir d'un fitxer CSV.
+- Eliminar repositoris en lot amb un patró de nom específic.
 
 ## Requisits
 
@@ -28,6 +27,7 @@ gh auth login
 - `create_repos_by_group.ps1`
 - `create_repos_by_user`
 - `delete_repos.ps1`
+- `Accept-All-GitHub-Invitations.ps1`
 
 ## 1) Crear repositoris en lot
 
@@ -55,6 +55,16 @@ L'script `delete_repos.ps1`:
 4. Llista repositoris de l'organització.
 5. Filtra els noms amb el patró indicat.
 6. Elimina els repositoris trobats i captura errors per cada repositori.
+
+## 4) Acceptar invitacions col·laborador
+
+L'script `Accept-All-GitHub-Invitations.ps1`:
+
+Serveix per acceptar totes les invitacions pendents de col·laborador a repositoris de GitHub. L'script:
+
+1. Comprova l'autenticació de `gh`.
+2. Llista totes les invitacions pendents.
+3. Accepta cada invitació i mostra un missatge de confirmació.
 
 ## Resolució de problemes
 
