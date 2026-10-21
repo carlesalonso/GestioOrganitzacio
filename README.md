@@ -66,14 +66,6 @@ Serveix per acceptar totes les invitacions pendents de col·laborador a reposito
 2. Llista totes les invitacions pendents.
 3. Accepta cada invitació i mostra un missatge de confirmació.
 
-## Resolució de problemes
-
-- `gh: command not found`: instal·la GitHub CLI i reinicia la terminal.
-- Error d'autenticació: torna a iniciar sessió amb `gh auth login`.
-- Falten permisos: comprova rols a l'organització i scopes del token.
-- No es troben repositoris: revisa `$organization` i `$pattern`.
-- No es troba `usuarios.txt`: crea el fitxer a la mateixa carpeta de l'script `create_repos_by_user`.
-
 ## Llicència
 
 Aquest projecte està sota la llicència MIT. Pots trobar-ne més detalls a l'arxiu `LICENSE`.
