@@ -7,29 +7,30 @@ if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
-Write-Host "🔐 Verificando autenticación..."
-$auth = gh auth status 2>&1
+Write-Host "Verificando autenticación..."
+$auth = (gh auth status 2>&1) -join "`n"
 
-if ($auth -notmatch "Scopes:.*repo") {
-    Write-Host "⚠️ No tienes el scope 'repo'. Reautenticando..."
+if ($auth -notmatch "Token scopes:.*repo") {
+    Write-Host "No tienes el scope 'repo'. Reautenticando..."
     gh auth login --scopes repo
 }
 
-Write-Host "📥 Obteniendo invitaciones pendientes..."
+Write-Host "Obteniendo invitaciones pendientes..."
 $inviteIds = gh api user/repository_invitations --jq '.[].id'
 
 if (-not $inviteIds) {
-    Write-Host "✔️ No hay invitaciones pendientes." -ForegroundColor Green
+    Write-Host "No hay invitaciones pendientes." -ForegroundColor Green
     exit 0
 }
 
-Write-Host "📌 Invitaciones encontradas:"
+Write-Host "Invitaciones encontradas:"
 $inviteIds | ForEach-Object { Write-Host " - ID: $_" }
 
-Write-Host "🚀 Aceptando invitaciones..."
+Write-Host "Aceptando invitaciones..."
 $inviteIds | ForEach-Object {
     Write-Host "   → Aceptando invitación $_ ..."
     gh api "user/repository_invitations/$_" -X PATCH
 }
 
-Write-Host "🎉 Todas las invitaciones han sido aceptadas correctamente." -ForegroundColor Green
+Write-Host "Todas las invitaciones han sido aceptadas correctamente." -ForegroundColor Green
+exit 0
