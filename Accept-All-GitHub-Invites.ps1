@@ -16,20 +16,20 @@ if ($auth -notmatch "Token scopes:.*repo") {
 }
 
 Write-Host "Obteniendo invitaciones pendientes..."
-$inviteIds = gh api user/repository_invitations --jq '.[].id'
+$invites = gh api user/repository_invitations --jq '.[] | {id: .id, user: .inviter.login, repo: .repository.full_name}' | ConvertFrom-Json
 
-if (-not $inviteIds) {
+if (-not $invites) {
     Write-Host "No hay invitaciones pendientes." -ForegroundColor Green
     exit 0
 }
 
 Write-Host "Invitaciones encontradas:"
-$inviteIds | ForEach-Object { Write-Host " - ID: $_" }
+$invites | ForEach-Object { Write-Host " - De $($_.user) para el repositorio $($_.repo)" }
 
 Write-Host "Aceptando invitaciones..."
-$inviteIds | ForEach-Object {
-    Write-Host "   → Aceptando invitación $_ ..."
-    gh api "user/repository_invitations/$_" -X PATCH
+$invites | ForEach-Object {
+    Write-Host "   → Aceptando invitación de $($_.user) ($($_.repo)) ..."
+    gh api "user/repository_invitations/$($_.id)" -X PATCH
 }
 
 Write-Host "Todas las invitaciones han sido aceptadas correctamente." -ForegroundColor Green
