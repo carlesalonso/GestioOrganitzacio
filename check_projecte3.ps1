@@ -10,7 +10,7 @@ $ReposFile = "assets/repos_projecte3.txt"
 # Nom complet (owner/repo) de la plantilla esperada
 $ExpectedTemplate = "smx-projecteintermodular/projecte3_template"
 # Carpetes obligatòries a l'arrel del repositori
-$RequiredFolders = @("tasca01", "tasca02", "tasca03", "tasca04", "tasca05", "tasca06")
+$RequiredFolders = @("tasca01", "tasca02", "tasca03")
 # Col·laboradors que han d'estar afegits al repositori
 $RequiredCollaborators = @("carlesalonso", "iboschmi", "cfugarolas", "CR1stiancom")
 # Fitxer CSV on es desa el resum de resultats
