@@ -1,10 +1,10 @@
 # check_projecte3.ps1
 # Comprova que els repositoris dels alumnes compleixen els requisits del Projecte 3:
 #   1. El repositori s'ha creat a partir de la plantilla "smx-projecteintermodular/projecte3_template"
-#   2. Existeix l'estructura de carpetes: tasca01, tasca02, tasca03, tasca04, tasca05, tasca06
-#   3. id01, id02, id03 i id04 han estat afegits com a col·laboradors del repositori
+#   2. Existeix l'estructura de carpetes: tasca01, tasca02, tasca03
+#   3. S'han afegit els col·laboradors: carlesalonso, iboschmi, cfugarolas, CR1stiancom
 
-# --- CONFIGURACIÓN ---
+# --- CONFIGURACIÓ ---
 # Fitxer de text amb una URL (o owner/repo) de repositori d'alumne per línia
 $ReposFile = "assets/repos_projecte3.txt"
 # Nom complet (owner/repo) de la plantilla esperada
@@ -20,13 +20,14 @@ $ReportFile = "check_projecte3_report.csv"
 # Comprova si la GitHub CLI està instal·lada
 if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
     Write-Host "GitHub CLI no està instal·lada. Si us plau, instal·la-la abans d'executar aquest script." -ForegroundColor Red
-    return
+    exit 1
 }
 
 # Verificar si el fitxer de repositoris existeix
 if (-not (Test-Path $ReposFile)) {
     Write-Host "Error: $ReposFile no trobat." -ForegroundColor Red
-    exit
+    Write-Host "A la carpeta assets crea un fitxer anomenat repos_projecte3.txt amb un owner/repo d'alumne per línia." -ForegroundColor Yellow
+    exit 1
 }
 
 function Get-OwnerRepo {
@@ -152,3 +153,4 @@ $results | Format-Table -AutoSize
 
 $results | Export-Csv -Path $ReportFile -NoTypeInformation -Encoding UTF8
 Write-Host "Informe desat a: $ReportFile" -ForegroundColor Green
+exit 0
