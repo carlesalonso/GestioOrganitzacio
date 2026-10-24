@@ -6,13 +6,13 @@
 
 # --- CONFIGURACIÓN ---
 # Fitxer de text amb una URL (o owner/repo) de repositori d'alumne per línia
-$ReposFile = "repos.txt"
+$ReposFile = "assets/repos_projecte3.txt"
 # Nom complet (owner/repo) de la plantilla esperada
 $ExpectedTemplate = "smx-projecteintermodular/projecte3_template"
 # Carpetes obligatòries a l'arrel del repositori
 $RequiredFolders = @("tasca01", "tasca02", "tasca03", "tasca04", "tasca05", "tasca06")
 # Col·laboradors que han d'estar afegits al repositori
-$RequiredCollaborators = @("id01", "id02", "id03", "id04")
+$RequiredCollaborators = @("carlesalonso", "iboschmi", "cfugarolas", "CR1stiancom")
 # Fitxer CSV on es desa el resum de resultats
 $ReportFile = "check_projecte3_report.csv"
 # ---------------------
