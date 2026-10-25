@@ -2,7 +2,7 @@
 # Comprova que els repositoris dels alumnes compleixen els requisits del Projecte 3:
 #   1. El repositori s'ha creat a partir de la plantilla "smx-projecteintermodular/projecte3_template"
 #   2. Existeix l'estructura de carpetes: tasca01, tasca02, tasca03
-#   3. Existeix l'arxiu Tasca2-GitHub.md dins de la carpeta tasca01
+#   3. Existeix l'arxiu Tasca2-GitHub.md dins de la carpeta tasca02
 #   4. S'han afegit els col·laboradors: carlesalonso, iboschmi, cfugarolas, CR1stiancom
 
 # --- CONFIGURACIÓ ---
@@ -69,7 +69,7 @@ foreach ($line in $RepoLines) {
         Repositori         = $ownerRepo
         PlantillaCorrecta  = $false
         CarpetesFaltants   = ""
-        ArxiuTasca01       = $false
+        ArxiuTasca02       = $false
         ColsFaltants       = ""
         Estat              = "ERROR"
     }
@@ -117,17 +117,18 @@ foreach ($line in $RepoLines) {
     }
     $result.CarpetesFaltants = ($missingFolders -join ", ")
 
-    # 3. Comprovar que existeix l'arxiu Tasca2-GitHub.md dins de la carpeta tasca01
-    $tasca01FileOk = $false
-    if ($missingFolders -contains "tasca01") {
-        Write-Host "   [FALLA] No es pot comprovar l'arxiu $RequiredFileInTasca02 perquè falta la carpeta tasca01" -ForegroundColor Red
+    # 3. Comprovar que existeix l'arxiu Tasca2-GitHub.md dins de la carpeta tasca02
+    $tasca02FileOk = $false
+    if ($missingFolders -contains "tasca02") {
+        Write-Host "   [FALLA] No es pot comprovar l'arxiu $RequiredFileInTasca02 perquè falta la carpeta tasca02" -ForegroundColor Red
     } else {
-        $tasca01ContentsJson = gh api "repos/$ownerRepo/contents/tasca02" 2>&1
+        $tasca02Directory = $contents | Where-Object { $_.type -eq "dir" -and $_.name -ieq "tasca02" } | Select-Object -First 1
+        $tasca02ContentsJson = gh api "repos/$ownerRepo/contents/$($tasca02Directory.name)" 2>&1
         if ($LASTEXITCODE -ne 0) {
-            Write-Host "   No s'ha pogut llistar el contingut de tasca01: $tasca01ContentsJson" -ForegroundColor Red
+            Write-Host "   No s'ha pogut llistar el contingut de tasca02: $tasca02ContentsJson" -ForegroundColor Red
         } else {
-            $tasca01Contents = $tasca01ContentsJson | ConvertFrom-Json
-            $existingFiles = $tasca01Contents | Where-Object { $_.type -eq "file" } | ForEach-Object { $_.name }
+            $tasca02Contents = $tasca02ContentsJson | ConvertFrom-Json
+            $existingFiles = $tasca02Contents | Where-Object { $_.type -eq "file" } | ForEach-Object { $_.name }
 
 
             if ($existingFiles -contains $RequiredFileInTasca02) {
@@ -163,7 +164,7 @@ foreach ($line in $RepoLines) {
     $result.ColsFaltants = ($missingCollaborators -join ", ")
 
     # Estat final del repositori
-    if ($result.PlantillaCorrecta -and $missingFolders.Count -eq 0 -and $tasca01FileOk -and $missingCollaborators.Count -eq 0) {
+    if ($result.PlantillaCorrecta -and $missingFolders.Count -eq 0 -and $tasca02FileOk -and $missingCollaborators.Count -eq 0) {
         $result.Estat = "CORRECTE"
         Write-Host "   Resultat: CORRECTE" -ForegroundColor Green
     } else {
@@ -180,4 +181,9 @@ $results | Format-Table -AutoSize
 
 $results | Export-Csv -Path $ReportFile -NoTypeInformation -Encoding UTF8
 Write-Host "Informe desat a: $ReportFile" -ForegroundColor Green
+
+if ($results | Where-Object { $_.Estat -ne "CORRECTE" }) {
+    exit 1
+}
+
 exit 0
