@@ -2,7 +2,8 @@
 # Comprova que els repositoris dels alumnes compleixen els requisits del Projecte 3:
 #   1. El repositori s'ha creat a partir de la plantilla "smx-projecteintermodular/projecte3_template"
 #   2. Existeix l'estructura de carpetes: tasca01, tasca02, tasca03
-#   3. S'han afegit els col·laboradors: carlesalonso, iboschmi, cfugarolas, CR1stiancom
+#   3. Existeix l'arxiu Tasca2-GitHub.md dins de la carpeta tasca01
+#   4. S'han afegit els col·laboradors: carlesalonso, iboschmi, cfugarolas, CR1stiancom
 
 # --- CONFIGURACIÓ ---
 # Fitxer de text amb una URL (o owner/repo) de repositori d'alumne per línia
@@ -13,6 +14,8 @@ $ExpectedTemplate = "smx-projecteintermodular/projecte3_template"
 $RequiredFolders = @("tasca01", "tasca02", "tasca03")
 # Col·laboradors que han d'estar afegits al repositori
 $RequiredCollaborators = @("carlesalonso", "iboschmi", "cfugarolas", "CR1stiancom")
+# Arxiu obligatori dins de la carpeta tasca02
+$RequiredFileInTasca01 = "Tasca2-GitHub.md"
 # Fitxer CSV on es desa el resum de resultats
 $ReportFile = "check_projecte3_report.csv"
 # ---------------------
@@ -66,6 +69,7 @@ foreach ($line in $RepoLines) {
         Repositori         = $ownerRepo
         PlantillaCorrecta  = $false
         CarpetesFaltants   = ""
+        ArxiuTasca01       = $false
         ColsFaltants       = ""
         Estat              = "ERROR"
     }
@@ -113,7 +117,30 @@ foreach ($line in $RepoLines) {
     }
     $result.CarpetesFaltants = ($missingFolders -join ", ")
 
-    # 3. Comprovar els col·laboradors del repositori
+    # 3. Comprovar que existeix l'arxiu Tasca2-GitHub.md dins de la carpeta tasca01
+    $tasca01FileOk = $false
+    if ($missingFolders -contains "tasca01") {
+        Write-Host "   [FALLA] No es pot comprovar l'arxiu $RequiredFileInTasca02 perquè falta la carpeta tasca01" -ForegroundColor Red
+    } else {
+        $tasca01ContentsJson = gh api "repos/$ownerRepo/contents/tasca02" 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "   No s'ha pogut llistar el contingut de tasca01: $tasca01ContentsJson" -ForegroundColor Red
+        } else {
+            $tasca01Contents = $tasca01ContentsJson | ConvertFrom-Json
+            $existingFiles = $tasca01Contents | Where-Object { $_.type -eq "file" } | ForEach-Object { $_.name }
+
+
+            if ($existingFiles -contains $RequiredFileInTasca02) {
+                Write-Host "   [OK] Arxiu trobat: tasca02/$RequiredFileInTasca02" -ForegroundColor Green
+                $tasca02FileOk = $true
+            } else {
+                Write-Host "   [FALLA] Arxiu no trobat: tasca02/$RequiredFileInTasca02" -ForegroundColor Red
+            }
+        }
+    }
+    $result.ArxiuTasca02 = $tasca02FileOk
+
+    # 4. Comprovar els col·laboradors del repositori
     $collaboratorsJson = gh api "repos/$ownerRepo/collaborators" --paginate 2>&1
     $missingCollaborators = @()
 
@@ -136,7 +163,7 @@ foreach ($line in $RepoLines) {
     $result.ColsFaltants = ($missingCollaborators -join ", ")
 
     # Estat final del repositori
-    if ($result.PlantillaCorrecta -and $missingFolders.Count -eq 0 -and $missingCollaborators.Count -eq 0) {
+    if ($result.PlantillaCorrecta -and $missingFolders.Count -eq 0 -and $tasca01FileOk -and $missingCollaborators.Count -eq 0) {
         $result.Estat = "CORRECTE"
         Write-Host "   Resultat: CORRECTE" -ForegroundColor Green
     } else {
