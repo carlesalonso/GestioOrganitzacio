@@ -15,7 +15,7 @@ $RequiredFolders = @("tasca01", "tasca02", "tasca03")
 # Col·laboradors que han d'estar afegits al repositori
 $RequiredCollaborators = @("carlesalonso", "iboschmi", "cfugarolas", "CR1stiancom")
 # Arxiu obligatori dins de la carpeta tasca02
-$RequiredFileInTasca01 = "Tasca2-GitHub.md"
+$RequiredFileInTasca02 = "Tasca2-GitHub.md"
 # Fitxer CSV on es desa el resum de resultats
 $ReportFile = "check_projecte3_report.csv"
 # ---------------------
