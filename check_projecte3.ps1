@@ -11,7 +11,7 @@ $ReposFile = "assets/repos_projecte3.txt"
 # Nom complet (owner/repo) de la plantilla esperada
 $ExpectedTemplate = "smx-projecteintermodular/projecte3_template"
 # Carpetes obligatòries a l'arrel del repositori
-$RequiredFolders = @("tasca01", "tasca02", "tasca03")
+$RequiredFolders = @("tasca02")
 # Col·laboradors que han d'estar afegits al repositori
 $RequiredCollaborators = @("carlesalonso", "iboschmi", "cfugarolas", "CR1stiancom")
 # Arxiu obligatori dins de la carpeta tasca02
@@ -95,7 +95,29 @@ foreach ($line in $RepoLines) {
         $result.PlantillaCorrecta = $false
     }
 
-    # 2. Comprovar l'estructura de carpetes a l'arrel del repositori
+# 2. Comprovar els col·laboradors del repositori
+    $collaboratorsJson = gh api "repos/$ownerRepo/collaborators" --paginate 2>&1
+    $missingCollaborators = @()
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "   No s'ha pogut llistar els col·laboradors: $collaboratorsJson" -ForegroundColor Red
+        $missingCollaborators = $RequiredCollaborators
+    } else {
+        $collaborators = $collaboratorsJson | ConvertFrom-Json
+        $existingLogins = $collaborators | ForEach-Object { $_.login }
+
+        foreach ($collab in $RequiredCollaborators) {
+            if ($existingLogins -contains $collab) {
+                Write-Host "   [OK] Col·laborador present: $collab" -ForegroundColor Green
+            } else {
+                Write-Host "   [FALLA] Col·laborador no trobat: $collab" -ForegroundColor Red
+                $missingCollaborators += $collab
+            }
+        }
+    }
+    $result.ColsFaltants = ($missingCollaborators -join ", ")
+
+    # 3. Comprovar l'estructura de carpetes a l'arrel del repositori
     $contentsJson = gh api "repos/$ownerRepo/contents" 2>&1
     $missingFolders = @()
 
@@ -117,7 +139,7 @@ foreach ($line in $RepoLines) {
     }
     $result.CarpetesFaltants = ($missingFolders -join ", ")
 
-    # 3. Comprovar que existeix l'arxiu Tasca2-GitHub.md dins de la carpeta tasca02
+    # 4. Comprovar que existeix l'arxiu Tasca2-GitHub.md dins de la carpeta tasca02
     $tasca02FileOk = $false
     if ($missingFolders -contains "tasca02") {
         Write-Host "   [FALLA] No es pot comprovar l'arxiu $RequiredFileInTasca02 perquè falta la carpeta tasca02" -ForegroundColor Red
@@ -141,27 +163,7 @@ foreach ($line in $RepoLines) {
     }
     $result.ArxiuTasca02 = $tasca02FileOk
 
-    # 4. Comprovar els col·laboradors del repositori
-    $collaboratorsJson = gh api "repos/$ownerRepo/collaborators" --paginate 2>&1
-    $missingCollaborators = @()
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "   No s'ha pogut llistar els col·laboradors: $collaboratorsJson" -ForegroundColor Red
-        $missingCollaborators = $RequiredCollaborators
-    } else {
-        $collaborators = $collaboratorsJson | ConvertFrom-Json
-        $existingLogins = $collaborators | ForEach-Object { $_.login }
-
-        foreach ($collab in $RequiredCollaborators) {
-            if ($existingLogins -contains $collab) {
-                Write-Host "   [OK] Col·laborador present: $collab" -ForegroundColor Green
-            } else {
-                Write-Host "   [FALLA] Col·laborador no trobat: $collab" -ForegroundColor Red
-                $missingCollaborators += $collab
-            }
-        }
-    }
-    $result.ColsFaltants = ($missingCollaborators -join ", ")
+    
 
     # Estat final del repositori
     if ($result.PlantillaCorrecta -and $missingFolders.Count -eq 0 -and $tasca02FileOk -and $missingCollaborators.Count -eq 0) {
