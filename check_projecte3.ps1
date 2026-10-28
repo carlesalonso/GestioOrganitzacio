@@ -1,6 +1,6 @@
 # check_projecte3.ps1
 # Comprova que els repositoris dels alumnes compleixen els requisits del Projecte 3:
-#   1. El repositori s'ha creat a partir de la plantilla "smx-projecteintermodular/projecte3_template"
+#   1. El repositori és privat i s'ha creat a partir de la plantilla "smx-projecteintermodular/projecte3_template"
 #   2. Existeix l'estructura de carpetes: tasca01, tasca02, tasca03
 #   3. Existeix l'arxiu Tasca2-GitHub.md dins de la carpeta tasca02
 #   4. S'han afegit els col·laboradors: carlesalonso, iboschmi, cfugarolas, CR1stiancom
@@ -68,13 +68,14 @@ foreach ($line in $RepoLines) {
     $result = [ordered]@{
         Repositori         = $ownerRepo
         PlantillaCorrecta  = $false
+        RepositoriPrivat   = $false
         CarpetesFaltants   = ""
         ArxiuTasca02       = $false
         ColsFaltants       = ""
         Estat              = "ERROR"
     }
 
-    # 1. Comprovar que el repositori s'ha generat a partir de la plantilla esperada
+    # 1. Comprovar que el repositori és privat i s'ha generat a partir de la plantilla esperada
     $repoInfoJson = gh api "repos/$ownerRepo" 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-Host "   No s'ha pogut accedir al repositori: $repoInfoJson" -ForegroundColor Red
@@ -85,6 +86,13 @@ foreach ($line in $RepoLines) {
 
     $repoInfo = $repoInfoJson | ConvertFrom-Json
     $templateFullName = $repoInfo.template_repository.full_name
+
+    if ($repoInfo.private -eq $true) {
+        Write-Host "   [OK] El repositori és privat" -ForegroundColor Green
+        $result.RepositoriPrivat = $true
+    } else {
+        Write-Host "   [FALLA] El repositori no és privat" -ForegroundColor Red
+    }
 
     if ($templateFullName -eq $ExpectedTemplate) {
         Write-Host "   [OK] Creat a partir de la plantilla ($ExpectedTemplate)" -ForegroundColor Green
@@ -166,7 +174,7 @@ foreach ($line in $RepoLines) {
     
 
     # Estat final del repositori
-    if ($result.PlantillaCorrecta -and $missingFolders.Count -eq 0 -and $tasca02FileOk -and $missingCollaborators.Count -eq 0) {
+    if ($result.PlantillaCorrecta -and $result.RepositoriPrivat -and $missingFolders.Count -eq 0 -and $tasca02FileOk -and $missingCollaborators.Count -eq 0) {
         $result.Estat = "CORRECTE"
         Write-Host "   Resultat: CORRECTE" -ForegroundColor Green
     } else {
