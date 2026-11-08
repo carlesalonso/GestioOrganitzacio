@@ -11,7 +11,7 @@ $ReposFile = "assets/repos_projecte3.txt"
 # Nom complet (owner/repo) de la plantilla esperada
 $ExpectedTemplate = "smx-projecteintermodular/projecte3_template"
 # Carpetes obligatòries a l'arrel del repositori
-$RequiredFolders = @("tasca02")
+$RequiredFolders = @("tasca01", "tasca02", "tasca04", "tasca06")
 # Col·laboradors que han d'estar afegits al repositori
 $RequiredCollaborators = @("carlesalonso", "iboschmi", "cfugarolas", "CR1stiancom")
 # Arxiu obligatori dins de la carpeta tasca02
