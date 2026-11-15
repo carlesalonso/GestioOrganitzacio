@@ -20,7 +20,16 @@ try {
 		if (-not $repo -or $repo.StartsWith('#')) { continue }
 
 		$usuario, $nombreRepo = $repo -split '/', 2
-		git clone -- "https://github.com/$repo.git"
+		$urlRepo = "https://github.com/$repo.git"
+
+		git ls-remote -- $urlRepo *>$null
+		if ($LASTEXITCODE -ne 0) {
+			Write-Warning "El repositorio no existe o no es accesible: $repo"
+			$errores++
+			continue
+		}
+
+		git clone -- $urlRepo
 		if ($LASTEXITCODE -ne 0) {
 			Write-Warning "No se pudo clonar: $repo"
 			$errores++
