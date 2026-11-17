@@ -1,4 +1,4 @@
-$ListaRepos = Join-Path $PSScriptRoot '.\assets\repos_projecte3.txt'
+$ListaRepos = Join-Path $PSScriptRoot '.\assets\control_git.txt'
 
 if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
 	throw 'Git no está instalado o no está disponible en PATH.'
