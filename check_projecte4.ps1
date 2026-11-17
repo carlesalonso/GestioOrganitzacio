@@ -1,6 +1,6 @@
 # check_projecte4.ps1
-# Comprova que els repositoris dels alumnes compleixen els requisits del Projecte 3:
-#   1. El repositori és privat i s'ha creat a partir de la plantilla "smx-projecteintermodular/projecte3_template"
+# Comprova que els repositoris dels alumnes compleixen els requisits del Projecte 4:
+#   1. El repositori és privat i s'ha creat a partir de la plantilla "smx-projecteintermodular/projecte4_template"
 #   2. Existeix l'estructura de carpetes: tasca01, tasca02, tasca03
 #   3. Existeix l'arxiu Tasca2-GitHub.md dins de la carpeta tasca02
 #   4. S'han afegit els col·laboradors: carlesalonso, iboschmi, cfugarolas, CR1stiancom
