@@ -40,6 +40,8 @@ try {
 		$carpetaUsuario = Join-Path $LocalPath $usuario
 		if (Test-Path -LiteralPath $carpetaUsuario) {
 			Write-Warning "Ya existe una carpeta para el usuario '$usuario', se omite el renombrado de: $repo"
+			Remove-Item -Path $carpetaClonada -Recurse -Force -Confirm:$false
+
 			continue
 		}
 		Rename-Item -LiteralPath $carpetaClonada -NewName $usuario -ErrorAction Stop
